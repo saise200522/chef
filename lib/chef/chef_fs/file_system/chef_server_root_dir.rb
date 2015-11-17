@@ -26,6 +26,7 @@ require 'chef/chef_fs/file_system/nodes_dir'
 require 'chef/chef_fs/file_system/org_entry'
 require 'chef/chef_fs/file_system/organization_invites_entry'
 require 'chef/chef_fs/file_system/organization_members_entry'
+require 'chef/chef_fs/file_system/policies_dir'
 require 'chef/chef_fs/file_system/environments_dir'
 require 'chef/chef_fs/data_handler/client_data_handler'
 require 'chef/chef_fs/data_handler/role_data_handler'
@@ -133,26 +134,43 @@ class Chef
         def children
           @children ||= begin
             result = [
+              # /cookbooks
               CookbooksDir.new(self),
+              # /data_bags
               DataBagsDir.new(self),
+              # /environments
               EnvironmentsDir.new(self),
+              # /roles
               RestListDir.new("roles", self, nil, Chef::ChefFS::DataHandler::RoleDataHandler.new)
             ]
             if repo_mode == 'hosted_everything'
               result += [
+                # /acls
                 AclsDir.new(self),
+                # /clients
                 RestListDir.new("clients", self, nil, Chef::ChefFS::DataHandler::ClientDataHandler.new),
+                # /containers
                 RestListDir.new("containers", self, nil, Chef::ChefFS::DataHandler::ContainerDataHandler.new),
+                # /groups
                 RestListDir.new("groups", self, nil, Chef::ChefFS::DataHandler::GroupDataHandler.new),
+                # /policies
+                PoliciesDir.new(self),
+                # /nodes
                 NodesDir.new(self),
+                # /org.json
                 OrgEntry.new("org.json", self),
+                # /members.json
                 OrganizationMembersEntry.new("members.json", self),
+                # /invitations.json
                 OrganizationInvitesEntry.new("invitations.json", self)
               ]
             elsif repo_mode != 'static'
               result += [
+                # /clients
                 RestListDir.new("clients", self, nil, Chef::ChefFS::DataHandler::ClientDataHandler.new),
+                # /nodes
                 NodesDir.new(self),
+                # /users
                 RestListDir.new("users", self, nil, Chef::ChefFS::DataHandler::UserDataHandler.new)
               ]
             end
