@@ -27,7 +27,7 @@ describe 'knife list', :workstation do
 
   when_the_chef_server "is empty" do
     it "knife list / returns all top level directories" do
-      knife('list /').should_succeed <<EOM
+      knife('list /').should_succeed <<-EOM
 /clients
 /cookbooks
 /data_bags
@@ -40,7 +40,7 @@ EOM
     end
 
     it "knife list -R / returns everything" do
-      knife('list -R /').should_succeed <<EOM
+      knife('list -R /').should_succeed <<-EOM
 /:
 clients
 cookbooks
@@ -93,7 +93,7 @@ EOM
     end
 
     it "knife list / returns all top level directories" do
-      knife('list /').should_succeed <<EOM
+      knife('list /').should_succeed <<-EOM
 /clients
 /cookbooks
 /data_bags
@@ -106,7 +106,7 @@ EOM
     end
 
     it "knife list -R / returns everything" do
-      knife('list -R /').should_succeed <<EOM
+      knife('list -R /').should_succeed <<-EOM
 /:
 clients
 cookbooks
@@ -172,7 +172,7 @@ EOM
     end
 
     it "knife list -R --flat / returns everything" do
-      knife('list -R --flat /').should_succeed <<EOM
+      knife('list -R --flat /').should_succeed <<-EOM
 /clients
 /clients/chef-validator.json
 /clients/chef-webui.json
@@ -211,7 +211,7 @@ EOM
     end
 
     it "knife list -Rfp / returns everything" do
-      knife('list -Rfp /').should_succeed <<EOM
+      knife('list -Rfp /').should_succeed <<-EOM
 /clients/
 /clients/chef-validator.json
 /clients/chef-webui.json
@@ -250,7 +250,7 @@ EOM
     end
 
     it "knife list /cookbooks returns the list of cookbooks" do
-      knife('list /cookbooks').should_succeed <<EOM
+      knife('list /cookbooks').should_succeed <<-EOM
 /cookbooks/cookbook1
 /cookbooks/cookbook2
 EOM
@@ -261,7 +261,7 @@ EOM
     end
 
     it "knife list /**.rb returns all ruby files" do
-      knife('list /**.rb').should_succeed <<EOM
+      knife('list /**.rb').should_succeed <<-EOM
 /cookbooks/cookbook1/metadata.rb
 /cookbooks/cookbook2/metadata.rb
 /cookbooks/cookbook2/recipes/default.rb
@@ -269,7 +269,7 @@ EOM
     end
 
     it "knife list /cookbooks/**.rb returns all ruby files" do
-      knife('list /cookbooks/**.rb').should_succeed <<EOM
+      knife('list /cookbooks/**.rb').should_succeed <<-EOM
 /cookbooks/cookbook1/metadata.rb
 /cookbooks/cookbook2/metadata.rb
 /cookbooks/cookbook2/recipes/default.rb
@@ -277,7 +277,7 @@ EOM
     end
 
     it "knife list /**.json returns all json files" do
-      knife('list /**.json').should_succeed <<EOM
+      knife('list /**.json').should_succeed <<-EOM
 /clients/chef-validator.json
 /clients/chef-webui.json
 /clients/client1.json
@@ -301,7 +301,7 @@ EOM
     end
 
     it "knife list /data**.json returns all data bag json files" do
-      knife('list /data**.json').should_succeed <<EOM
+      knife('list /data**.json').should_succeed <<-EOM
 /data_bags/bag1/item1.json
 /data_bags/bag1/item2.json
 /data_bags/bag2/item1.json
@@ -333,7 +333,7 @@ EOM
           before { cwd '.' }
 
           it "knife list -Rfp returns everything" do
-            knife('list -Rfp').should_succeed <<EOM
+            knife('list -Rfp').should_succeed <<-EOM
 clients/
 clients/chef-validator.json
 clients/chef-webui.json
@@ -379,7 +379,7 @@ EOM
           before { cwd 'cookbooks' }
 
           it "knife list -Rfp / returns everything" do
-            knife('list -Rfp /').should_succeed <<EOM
+            knife('list -Rfp /').should_succeed <<-EOM
 /clients/
 /clients/chef-validator.json
 /clients/chef-webui.json
@@ -418,7 +418,7 @@ EOM
           end
 
           it "knife list -Rfp .. returns everything" do
-            knife('list -Rfp ..').should_succeed <<EOM
+            knife('list -Rfp ..').should_succeed <<-EOM
 /clients/
 /clients/chef-validator.json
 /clients/chef-webui.json
@@ -457,7 +457,7 @@ EOM
           end
 
           it "knife list -Rfp returns cookbooks" do
-            knife('list -Rfp').should_succeed <<EOM
+            knife('list -Rfp').should_succeed <<-EOM
 cookbook1/
 cookbook1/metadata.rb
 cookbook2/
@@ -476,7 +476,7 @@ EOM
           before { cwd 'cookbooks/cookbook2' }
 
           it "knife list -Rfp returns cookbooks" do
-            knife('list -Rfp').should_succeed <<EOM
+            knife('list -Rfp').should_succeed <<-EOM
 metadata.rb
 recipes/
 recipes/default.rb
@@ -495,7 +495,7 @@ EOM
           before { cwd 'cookbooks' }
 
           it "knife list -Rfp returns cookbooks" do
-            knife('list -Rfp').should_succeed <<EOM
+            knife('list -Rfp').should_succeed <<-EOM
 cookbook1/
 cookbook1/metadata.rb
 cookbook2/
@@ -510,7 +510,7 @@ EOM
           before { cwd 'symlinked' }
 
           it "knife list -Rfp returns cookbooks" do
-            knife('list -Rfp').should_succeed <<EOM
+            knife('list -Rfp').should_succeed <<-EOM
 cookbook1/
 cookbook1/metadata.rb
 cookbook2/
@@ -532,7 +532,7 @@ EOM
           before { cwd 'real_cookbooks' }
 
           it "knife list -Rfp returns cookbooks" do
-            knife('list -Rfp').should_succeed <<EOM
+            knife('list -Rfp').should_succeed <<-EOM
 cookbook1/
 cookbook1/metadata.rb
 cookbook2/
@@ -547,7 +547,7 @@ EOM
           before { cwd 'cookbooks' }
 
           it "knife list -Rfp returns cookbooks" do
-            knife('list -Rfp').should_succeed <<EOM
+            knife('list -Rfp').should_succeed <<-EOM
 cookbook1/
 cookbook1/metadata.rb
 cookbook2/
@@ -607,7 +607,7 @@ EOM
       end
 
       it "knife list -Rfp / returns everything" do
-        knife('list -Rp --local --flat /').should_succeed <<EOM
+        knife('list -Rp --local --flat /').should_succeed <<-EOM
 /clients/
 /clients/client1.json
 /clients/client2.json
@@ -668,7 +668,7 @@ EOM
 
     context 'and is empty' do
       it "knife list / returns all top level directories" do
-        knife('list /').should_succeed <<EOM
+        knife('list /').should_succeed <<-EOM
 /acls
 /clients
 /containers
@@ -686,7 +686,7 @@ EOM
       end
 
       it "knife list -R / returns everything" do
-        knife('list -R /').should_succeed <<EOM
+        knife('list -R /').should_succeed <<-EOM
 /:
 acls
 clients
@@ -796,7 +796,7 @@ EOM
     end
 
     it 'knife list -R / returns everything' do
-      knife('list -R /').should_succeed <<EOM
+      knife('list -R /').should_succeed <<-EOM
 /:
 acls
 clients
