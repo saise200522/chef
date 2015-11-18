@@ -175,6 +175,10 @@ module ChefConfig
     # Defaults to <chef_repo_path>/nodes.
     default(:node_path) { derive_path_from_chef_repo_path('nodes') }
 
+    # Location of policies on disk. String or array of strings.
+    # Defaults to <chef_repo_path>/policies.
+    default(:policy_path) { derive_path_from_chef_repo_path('policies') }
+
     # Location of roles on disk. String or array of strings.
     # Defaults to <chef_repo_path>/roles.
     default(:role_path) { derive_path_from_chef_repo_path('roles') }
