@@ -886,5 +886,141 @@ users.json
 /roles:
 EOM
     end
+
+    context "has plenty of stuff in it" do
+      before do
+        client 'client1', {}
+        client 'client2', {}
+        container 'container1', {}
+        container 'container2', {}
+        cookbook 'cookbook1', '1.0.0'
+        cookbook 'cookbook2', '1.0.1', { 'recipes' => { 'default.rb' => '' } }
+        data_bag 'bag1', { 'item1' => {}, 'item2' => {} }
+        data_bag 'bag2', { 'item1' => {}, 'item2' => {} }
+        environment 'environment1', {}
+        environment 'environment2', {}
+        group 'group1', {}
+        group 'group2', {}
+        node 'node1', {}
+        node 'node2', {}
+        org_invite 'user1'
+        org_member 'user2'
+        policy 'policy1', '1.2.3', {}
+        policy 'policy2', '1.2.3', {}
+        policy 'policy2', '1.3.5', {}
+        role 'role1', {}
+        role 'role2', {}
+        user 'user1', {}
+        user 'user2', {}
+      end
+
+      it "knife list -Rfp / returns everything" do
+        knife('list -Rfp /').should_succeed <<-EOM
+/acls/
+/acls/clients/
+/acls/clients/client1.json
+/acls/clients/client2.json
+/acls/clients/foo-validator.json
+/acls/containers/
+/acls/containers/clients.json
+/acls/containers/container1.json
+/acls/containers/container2.json
+/acls/containers/containers.json
+/acls/containers/cookbook_artifacts.json
+/acls/containers/cookbooks.json
+/acls/containers/data.json
+/acls/containers/environments.json
+/acls/containers/groups.json
+/acls/containers/nodes.json
+/acls/containers/policies.json
+/acls/containers/roles.json
+/acls/containers/sandboxes.json
+/acls/cookbooks/
+/acls/cookbooks/cookbook1.json
+/acls/cookbooks/cookbook2.json
+/acls/data_bags/
+/acls/data_bags/bag1.json
+/acls/data_bags/bag2.json
+/acls/environments/
+/acls/environments/_default.json
+/acls/environments/environment1.json
+/acls/environments/environment2.json
+/acls/groups/
+/acls/groups/admins.json
+/acls/groups/billing-admins.json
+/acls/groups/clients.json
+/acls/groups/group1.json
+/acls/groups/group2.json
+/acls/groups/users.json
+/acls/nodes/
+/acls/nodes/node1.json
+/acls/nodes/node2.json
+/acls/organization.json
+/acls/policies/
+/acls/policies/policy1-1.2.3.json
+/acls/policies/policy2-1.2.3.json
+/acls/policies/policy2-1.3.5.json
+/acls/roles/
+/acls/roles/role1.json
+/acls/roles/role2.json
+/clients/
+/clients/client1.json
+/clients/client2.json
+/clients/foo-validator.json
+/containers/
+/containers/clients.json
+/containers/container1.json
+/containers/container2.json
+/containers/containers.json
+/containers/cookbook_artifacts.json
+/containers/cookbooks.json
+/containers/data.json
+/containers/environments.json
+/containers/groups.json
+/containers/nodes.json
+/containers/policies.json
+/containers/roles.json
+/containers/sandboxes.json
+/cookbooks/
+/cookbooks/cookbook1/
+/cookbooks/cookbook1/metadata.rb
+/cookbooks/cookbook2/
+/cookbooks/cookbook2/metadata.rb
+/cookbooks/cookbook2/recipes/
+/cookbooks/cookbook2/recipes/default.rb
+/data_bags/
+/data_bags/bag1/
+/data_bags/bag1/item1.json
+/data_bags/bag1/item2.json
+/data_bags/bag2/
+/data_bags/bag2/item1.json
+/data_bags/bag2/item2.json
+/environments/
+/environments/_default.json
+/environments/environment1.json
+/environments/environment2.json
+/groups/
+/groups/admins.json
+/groups/billing-admins.json
+/groups/clients.json
+/groups/group1.json
+/groups/group2.json
+/groups/users.json
+/invitations.json
+/members.json
+/nodes/
+/nodes/node1.json
+/nodes/node2.json
+/org.json
+/policies/
+/policies/policy1-1.2.3.json
+/policies/policy2-1.2.3.json
+/policies/policy2-1.3.5.json
+/roles/
+/roles/role1.json
+/roles/role2.json
+EOM
+      end
+    end
   end
 end
