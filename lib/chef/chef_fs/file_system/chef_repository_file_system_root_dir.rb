@@ -163,8 +163,6 @@ class Chef
             dirs = paths.map { |path| ChefRepositoryFileSystemCookbooksDir.new(name, self, path) }
           when 'data_bags'
             dirs = paths.map { |path| ChefRepositoryFileSystemDataBagsDir.new(name, self, path) }
-          when 'policies'
-            dirs = paths.map { |path| ChefRepositoryFileSystemPoliciesDir.new(name, self, path) }
           when 'acls'
             dirs = paths.map { |path| ChefRepositoryFileSystemAclsDir.new(name, self, path) }
           else
@@ -175,6 +173,10 @@ class Chef
                 Chef::ChefFS::DataHandler::EnvironmentDataHandler.new
               when 'nodes'
                 Chef::ChefFS::DataHandler::NodeDataHandler.new
+              when 'policies'
+                Chef::ChefFS::DataHandler::PolicyDataHandler.new
+              when 'policy_groups'
+                Chef::ChefFS::DataHandler::PolicyGroupDataHandler.new
               when 'roles'
                 Chef::ChefFS::DataHandler::RoleDataHandler.new
               when 'users'

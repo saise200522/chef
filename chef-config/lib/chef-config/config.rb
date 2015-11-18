@@ -179,6 +179,10 @@ module ChefConfig
     # Defaults to <chef_repo_path>/policies.
     default(:policy_path) { derive_path_from_chef_repo_path('policies') }
 
+    # Location of policy_groups on disk. String or array of strings.
+    # Defaults to <chef_repo_path>/policy_groups.
+    default(:policy_group_path) { derive_path_from_chef_repo_path('policy_groups') }
+
     # Location of roles on disk. String or array of strings.
     # Defaults to <chef_repo_path>/roles.
     default(:role_path) { derive_path_from_chef_repo_path('roles') }
