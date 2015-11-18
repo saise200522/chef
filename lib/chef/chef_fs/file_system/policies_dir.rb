@@ -17,6 +17,7 @@
 #
 
 require 'chef/chef_fs/file_system/rest_list_dir'
+require 'chef/chef_fs/data_handler/policy_data_handler'
 
 class Chef
   module ChefFS
@@ -34,7 +35,7 @@ class Chef
       #
       class PoliciesDir < RestListDir
         def initialize(parent)
-          super("policies", parent)
+          super("policies", parent, nil, Chef::ChefFS::DataHandler::PolicyDataHandler.new)
         end
 
         # Operations of a RestListDir:
