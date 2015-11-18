@@ -1143,6 +1143,7 @@ Created /acls/groups/clients.json
 Created /acls/groups/users.json
 Created /acls/groups/x.json
 Created /acls/nodes
+Created /acls/policies
 Created /acls/roles
 Created /acls/organization.json
 Created /clients
@@ -1174,6 +1175,7 @@ Created /invitations.json
 Created /members.json
 Created /nodes
 Created /org.json
+Created /policies
 Created /roles
 EOM
         knife('diff --name-status /').should_succeed ''
