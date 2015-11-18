@@ -26,7 +26,7 @@ class Chef
   module ChefFS
     module FileSystem
       class AclsDir < BaseFSDir
-        ENTITY_TYPES = %w(clients containers cookbooks data_bags environments groups nodes roles) # we don't read sandboxes, so we don't read their acls
+        ENTITY_TYPES = %w(clients containers cookbooks data_bags environments groups nodes policies roles) # we don't read sandboxes, so we don't read their acls
 
         def initialize(parent)
           super('acls', parent)
