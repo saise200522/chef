@@ -153,8 +153,6 @@ class Chef
                 RestListDir.new("containers", self, nil, Chef::ChefFS::DataHandler::ContainerDataHandler.new),
                 # /groups
                 RestListDir.new("groups", self, nil, Chef::ChefFS::DataHandler::GroupDataHandler.new),
-                # /policies
-                PoliciesDir.new(self),
                 # /nodes
                 NodesDir.new(self),
                 # /org.json
@@ -162,7 +160,9 @@ class Chef
                 # /members.json
                 OrganizationMembersEntry.new("members.json", self),
                 # /invitations.json
-                OrganizationInvitesEntry.new("invitations.json", self)
+                OrganizationInvitesEntry.new("invitations.json", self),
+                # /policies
+                PoliciesDir.new(self),
               ]
             elsif repo_mode != 'static'
               result += [
