@@ -46,9 +46,8 @@ class Chef
         # Get the top-level matches
         args = pattern_args_from(patterns)
         all_results = parallelize(pattern_args_from(patterns)) do |pattern|
-          require 'pry'; binding.pry
           pattern_results = Chef::ChefFS::FileSystem.list(config[:local] ? local_fs : chef_fs, pattern).to_a
-          require 'pry'; binding.pry
+
           if pattern_results.first && !pattern_results.first.exists? && pattern.exact_path
             ui.error "#{format_path(pattern_results.first)}: No such file or directory"
             self.exit_code = 1
