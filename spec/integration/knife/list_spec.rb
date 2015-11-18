@@ -33,6 +33,7 @@ describe 'knife list', :workstation do
 /data_bags
 /environments
 /nodes
+/policies
 /roles
 /users
 EOM
@@ -46,6 +47,7 @@ cookbooks
 data_bags
 environments
 nodes
+policies
 roles
 users
 
@@ -61,6 +63,8 @@ chef-webui.json
 _default.json
 
 /nodes:
+
+/policies:
 
 /roles:
 
@@ -95,6 +99,7 @@ EOM
 /data_bags
 /environments
 /nodes
+/policies
 /roles
 /users
 EOM
@@ -108,6 +113,7 @@ cookbooks
 data_bags
 environments
 nodes
+policies
 roles
 users
 
@@ -152,6 +158,8 @@ environment2.json
 node1.json
 node2.json
 
+/policies:
+
 /roles:
 role1.json
 role2.json
@@ -191,6 +199,7 @@ EOM
 /nodes
 /nodes/node1.json
 /nodes/node2.json
+/policies
 /roles
 /roles/role1.json
 /roles/role2.json
@@ -229,6 +238,7 @@ EOM
 /nodes/
 /nodes/node1.json
 /nodes/node2.json
+/policies/
 /roles/
 /roles/role1.json
 /roles/role2.json
@@ -281,6 +291,7 @@ EOM
 /environments/environment2.json
 /nodes/node1.json
 /nodes/node2.json
+/policies/
 /roles/role1.json
 /roles/role2.json
 /users/admin.json
@@ -349,6 +360,7 @@ environments/environment2.json
 nodes/
 nodes/node1.json
 nodes/node2.json
+/policies/
 roles/
 roles/role1.json
 roles/role2.json
@@ -394,6 +406,7 @@ cookbook2/recipes/default.rb
 /nodes/
 /nodes/node1.json
 /nodes/node2.json
+/policies/
 /roles/
 /roles/role1.json
 /roles/role2.json
@@ -432,6 +445,7 @@ cookbook2/recipes/default.rb
 /nodes/
 /nodes/node1.json
 /nodes/node2.json
+/policies/
 /roles/
 /roles/role1.json
 /roles/role2.json
@@ -617,6 +631,7 @@ EOM
 /nodes/
 /nodes/node1.json
 /nodes/node2.json
+/policies/
 /roles/
 /roles/role1.json
 /roles/role2.json
@@ -665,6 +680,7 @@ EOM
 /members.json
 /nodes
 /org.json
+/policies
 /roles
 EOM
       end
@@ -683,6 +699,7 @@ invitations.json
 members.json
 nodes
 org.json
+policies/
 roles
 
 /acls:
@@ -694,6 +711,7 @@ environments
 groups
 nodes
 organization.json
+policies
 roles
 
 /acls/clients:
@@ -759,6 +777,8 @@ clients.json
 users.json
 
 /nodes:
+
+/policies:
 
 /roles:
 EOM
@@ -865,6 +885,8 @@ clients.json
 users.json
 
 /nodes:
+
+/policies:
 
 /roles:
 EOM
