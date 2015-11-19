@@ -23,10 +23,6 @@ class Chef
   module ChefFS
     module FileSystem
       class DataBagsDir < RestListDir
-        def initialize(parent)
-          super("data_bags", parent, "data")
-        end
-
         def make_child_entry(name, exists = false)
           result = @children.select { |child| child.name == name }.first if @children
           result || DataBagDir.new(name, self, exists)

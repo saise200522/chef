@@ -32,10 +32,6 @@ class Chef
 
         include Chef::Mixin::FileClass
 
-        def initialize(parent)
-          super("cookbooks", parent)
-        end
-
         def make_child_entry(name)
           result = @children.select { |child| child.name == name }.first if @children
           result || CookbookDir.new(name, self)

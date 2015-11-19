@@ -25,10 +25,6 @@ class Chef
   module ChefFS
     module FileSystem
       class NodesDir < RestListDir
-        def initialize(parent)
-          super("nodes", parent, nil, Chef::ChefFS::DataHandler::NodeDataHandler.new)
-        end
-
         # Identical to RestListDir.children, except supports environments
         def children
           begin

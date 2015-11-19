@@ -17,7 +17,7 @@
 #
 
 require 'chef/chef_fs/file_system/rest_list_dir'
-require 'chef/chef_fs/data_handler/policy_data_handler'
+require 'chef/chef_fs/file_system/policy_revision_entry'
 
 class Chef
   module ChefFS
@@ -34,19 +34,6 @@ class Chef
       #   - /policies/NAME-REVISION.json - PolicyRevision - maps to /policies/NAME/revisions/REVISION
       #
       class PoliciesDir < RestListDir
-        def initialize(parent)
-          super("policies", parent, nil, Chef::ChefFS::DataHandler::PolicyDataHandler.new)
-        end
-
-        # Operations of a RestListDir:
-        # child(name) - BaseFsDir
-        # children - custom
-        # exists? - RestListDir is fine
-        # dir? - RestListDir is fine
-        # create_child - POST /policies/NAME/revisions
-        # delete(recursive) - RestListDir
-
-
         # Children: NAME-REVISION.json for all revisions of all policies
         #
         # /nodes: {
@@ -58,10 +45,10 @@ class Chef
         #   "foo": {}
         # }
 
-        # def make_child_entry(name, exists = nil)
-        #   @children.select { |child| child.name == name }.first if @children
-        #   PolicyRevisionEntry.new(name, self, exists)
-        # end
+        def make_child_entry(name, exists = nil)
+          @children.select { |child| child.name == name }.first if @children
+          PolicyRevisionEntry.new(name, self, exists)
+        end
 
         # Children come from /policies in this format:
         # {
