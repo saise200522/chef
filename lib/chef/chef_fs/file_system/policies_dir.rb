@@ -103,19 +103,11 @@ class Chef
           end
 
           # Create the child entry that will be returned
-          result = make_child_entry(name, true)
+          entry = make_child_entry(name, true)
 
-          # Normalize the file_contents before post (add defaults, etc.)
-          if data_handler
-            object = data_handler.normalize_for_post(object, result)
-            data_handler.verify_integrity(object, result) do |error|
-              raise Chef::ChefFS::FileSystem::OperationFailedError.new(:create_child, self), "Error creating '#{name}': #{error}"
-            end
-          end
-
-          # POST /api_path with the normalized file_contents
+          # PolicyRevisionEntry handles creating the correct api_path etc.
           begin
-            rest.post(api_path, object)
+            entry.write(file_contents)
           rescue Timeout::Error => e
             raise Chef::ChefFS::FileSystem::OperationFailedError.new(:create_child, self, e), "Timeout creating '#{name}': #{e}"
           rescue Net::HTTPServerException => e
