@@ -16,13 +16,9 @@ class Chef
         end
 
         def verify_integrity(object_data, entry, &on_error)
-
           if object_data["policies"].size == 0
             on_error.call("Policy group #{object_data["name"]} does not have any policies in it.")
           end
-
-          true
-
         end
 
       end
