@@ -27,6 +27,7 @@ require 'chef/chef_fs/file_system/org_entry'
 require 'chef/chef_fs/file_system/organization_invites_entry'
 require 'chef/chef_fs/file_system/organization_members_entry'
 require 'chef/chef_fs/file_system/policies_dir'
+require 'chef/chef_fs/file_system/policy_groups_dir'
 require 'chef/chef_fs/file_system/environments_dir'
 require 'chef/chef_fs/data_handler/acl_data_handler'
 require 'chef/chef_fs/data_handler/client_data_handler'
@@ -168,7 +169,7 @@ class Chef
                 # /policies
                 PoliciesDir.new("policies", self, nil, Chef::ChefFS::DataHandler::PolicyDataHandler.new),
                 # /policy_groups
-                RestListDir.new("policy_groups", self, nil, Chef::ChefFS::DataHandler::PolicyGroupDataHandler.new),
+                PolicyGroupsDir.new("policy_groups", self, nil, Chef::ChefFS::DataHandler::PolicyGroupDataHandler.new),
               ]
             elsif repo_mode != 'static'
               result += [
