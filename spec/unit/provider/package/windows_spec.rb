@@ -17,6 +17,8 @@
 #
 
 require 'spec_helper'
+require 'chef/provider/package/windows/exe'
+require 'chef/provider/package/windows/msi'
 
 describe Chef::Provider::Package::Windows, :windows_only do
   before(:each) do
@@ -108,6 +110,26 @@ describe Chef::Provider::Package::Windows, :windows_only do
         expect(provider.package_provider).to be_a(Chef::Provider::Package::Windows::MSI)
       end
 
+      it "sets the package provider to Exe if the the installer type is :inno" do
+        allow(provider).to receive(:installer_type).and_return(:inno)
+        expect(provider.package_provider).to be_a(Chef::Provider::Package::Windows::Exe)
+      end
+
+      it "sets the package provider to Exe if the the installer type is :nsis" do
+        allow(provider).to receive(:installer_type).and_return(:nsis)
+        expect(provider.package_provider).to be_a(Chef::Provider::Package::Windows::Exe)
+      end
+
+      it "sets the package provider to Exe if the the installer type is :wise" do
+        allow(provider).to receive(:installer_type).and_return(:wise)
+        expect(provider.package_provider).to be_a(Chef::Provider::Package::Windows::Exe)
+      end
+
+      it "sets the package provider to Exe if the the installer type is :installshield" do
+        allow(provider).to receive(:installer_type).and_return(:installshield)
+        expect(provider.package_provider).to be_a(Chef::Provider::Package::Windows::Exe)
+      end
+
       it "raises an error if the installer_type is unknown" do
         allow(provider).to receive(:installer_type).and_return(:apt_for_windows)
         expect { provider.package_provider }.to raise_error
@@ -156,10 +178,35 @@ describe Chef::Provider::Package::Windows, :windows_only do
       expect(provider.installer_type).to eql(:msi)
     end
 
+    it "sets installer_type to inno if the source contains inno" do
+      allow(::Kernel).to receive(:open).and_return('blah blah inno blah')
+      provider.new_resource.source("microsoft_installer.exe")
+      expect(provider.installer_type).to eql(:inno)
+    end
+
+    it "sets installer_type to wise if the source contains wise" do
+      allow(::Kernel).to receive(:open).and_return('blah blah wise blah')
+      provider.new_resource.source("microsoft_installer.exe")
+      expect(provider.installer_type).to eql(:wise)
+    end
+
+    it "sets installer_type to nsis if the source contains nsis" do
+      allow(::Kernel).to receive(:open).and_return('blah blah nsis blah')
+      provider.new_resource.source("microsoft_installer.exe")
+      expect(provider.installer_type).to eql(:nsis)
+    end
+
+    it "sets installer_type to installshield if the source is setup.exe" do
+      allow(::Kernel).to receive(:open).and_return('')
+      provider.new_resource.source("setup.exe")
+      expect(provider.installer_type).to eql(:installshield)
+    end
+
     it "raises an error if it cannot determine the installer type" do
+      allow(::Kernel).to receive(:open).and_return('')
       provider.new_resource.installer_type(nil)
       provider.new_resource.source("tomfoolery.now")
-      expect { provider.installer_type }.to raise_error(ArgumentError)
+      expect { provider.installer_type }.to raise_error(Chef::Exceptions::AttributeNotFound)
     end
   end
 end

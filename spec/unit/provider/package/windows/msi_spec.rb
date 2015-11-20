@@ -17,6 +17,7 @@
 #
 
 require 'spec_helper'
+require 'chef/provider/package/windows/msi'
 
 describe Chef::Provider::Package::Windows::MSI do
   let(:node) { double('Chef::Node') }

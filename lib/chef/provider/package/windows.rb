@@ -32,12 +32,6 @@ class Chef
         provides :package, os: "windows"
         provides :windows_package, os: "windows"
 
-        # Depending on the installer, we may need to examine installer_type or
-        # source attributes, or search for text strings in the installer file
-        # binary to determine the installer type for the user. Since the file
-        # must be on disk to do so, we have to make this choice in the provider.
-        require 'chef/provider/package/windows/msi.rb'
-
         # load_current_resource is run in Chef::Provider#run_action when not in whyrun_mode?
         def load_current_resource
           @current_resource = Chef::Resource::WindowsPackage.new(@new_resource.name)
@@ -56,7 +50,11 @@ class Chef
           @package_provider ||= begin
             case installer_type
             when :msi
+              require 'chef/provider/package/windows/msi'
               Chef::Provider::Package::Windows::MSI.new(resource_for_provider)
+            when :inno, :wise, :nsis, :installshield
+              require 'chef/provider/package/windows/exe'
+              Chef::Provider::Package::Windows::Exe.new(resource_for_provider, installer_type)
             else
               raise "Unable to find a Chef::Provider::Package::Windows provider for installer_type '#{installer_type}'"
             end
@@ -64,16 +62,36 @@ class Chef
         end
 
         def installer_type
+          # Depending on the installer, we may need to examine installer_type or
+          # source attributes, or search for text strings in the installer file
+          # binary to determine the installer type for the user. Since the file
+          # must be on disk to do so, we have to make this choice in the provider.
           @installer_type ||= begin
             if @new_resource.installer_type
               @new_resource.installer_type
             else
-              file_extension = ::File.basename(@new_resource.source).split(".").last.downcase
+              basename = ::File.basename(@new_resource.source)
+              file_extension = basename.split(".").last.downcase
 
               if file_extension == "msi"
                 :msi
               else
-                raise ArgumentError, "Installer type for Windows Package '#{@new_resource.name}' not specified and cannot be determined from file extension '#{file_extension}'"
+                contents = ::Kernel.open(::File.expand_path(@new_resource.source), 'rb', &:read) # TODO: limit data read in
+                case contents
+                when /inno/i # Inno Setup
+                  :inno
+                when /wise/i # Wise InstallMaster
+                  :wise
+                when /nsis/i # Nullsoft Scriptable Install System
+                  :nsis
+                else
+                  # if file is named 'setup.exe' assume installshield
+                  if basename == 'setup.exe'
+                    :installshield
+                  else
+                    fail Chef::Exceptions::AttributeNotFound, "Installer type for Windows Package '#{@new_resource.name}' not specified and cannot be determined from file extension '#{file_extension}'"
+                  end
+                end
               end
             end
           end
