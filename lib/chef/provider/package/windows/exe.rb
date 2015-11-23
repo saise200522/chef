@@ -1,6 +1,7 @@
 #
+# Author:: Seth Chisamore (<schisamo@chef.io>)
 # Author:: Matt Wrock <matt@mattwrock.com>
-# Copyright:: Copyright (c) 2015 Chef Software, Inc.
+# Copyright:: Copyright (c) 2011, 2015 Chef Software, Inc.
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +20,6 @@
 # TODO: Allow @new_resource.source to be a Product Code as a GUID for uninstall / network install
 
 require 'chef/mixin/shell_out'
-require 'Win32API' if Chef::Platform.windows?
 
 class Chef
   class Provider
@@ -49,7 +49,7 @@ class Chef
           end
 
           def install_package(name, version)
-            Chef::Log.debug("#{@new_resource} installing Nullsoft package '#{@new_resource.source}'")
+            Chef::Log.debug("#{@new_resource} installing #{@new_resource.installer_type} package '#{@new_resource.source}'")
             shell_out!(
               [
                 "start",
