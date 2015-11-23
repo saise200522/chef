@@ -206,7 +206,7 @@ describe Chef::Provider::Package::Windows, :windows_only do
       allow(::Kernel).to receive(:open).and_return('')
       provider.new_resource.installer_type(nil)
       provider.new_resource.source("tomfoolery.now")
-      expect { provider.installer_type }.to raise_error(Chef::Exceptions::AttributeNotFound)
+      expect { provider.installer_type }.to raise_error(Chef::Exceptions::CannotDetermineWindowsInstallerType)
     end
   end
 end

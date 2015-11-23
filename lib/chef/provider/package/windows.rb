@@ -89,7 +89,7 @@ class Chef
                   if basename == 'setup.exe'
                     :installshield
                   else
-                    fail Chef::Exceptions::AttributeNotFound, "Installer type for Windows Package '#{@new_resource.name}' not specified and cannot be determined from file extension '#{file_extension}'"
+                    fail Chef::Exceptions::CannotDetermineWindowsInstallerType, "Installer type for Windows Package '#{@new_resource.name}' not specified and cannot be determined from file extension '#{file_extension}'"
                   end
                 end
               end
