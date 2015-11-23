@@ -209,4 +209,16 @@ describe Chef::Provider::Package::Windows, :windows_only do
       expect { provider.installer_type }.to raise_error(Chef::Exceptions::CannotDetermineWindowsInstallerType)
     end
   end
+
+  describe "action_install" do
+    context "no exe version given" do
+      let(:new_resource) { Chef::Resource::WindowsPackage.new("blah.exe") }
+
+      it "installs latest" do
+        new_resource.installer_type(:inno)
+        expect(provider).to receive(:install_package).with("blah.exe", "latest")
+        provider.run_action(:install)
+      end
+    end
+  end
 end

@@ -124,6 +124,13 @@ class Chef
           [new_resource.version]
         end
 
+        # @return [String] candidate_version
+        def candidate_version
+          @candidate_version ||= begin
+            @new_resource.version || 'latest'
+          end
+        end
+
         private
 
         def downloadable_file_missing?
