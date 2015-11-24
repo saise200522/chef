@@ -211,13 +211,83 @@ describe Chef::Provider::Package::Windows, :windows_only do
   end
 
   describe "action_install" do
-    context "no exe version given" do
-      let(:new_resource) { Chef::Resource::WindowsPackage.new("blah.exe") }
+    let(:new_resource) { Chef::Resource::WindowsPackage.new("blah.exe") }
+    before { new_resource.installer_type(:inno) }
 
+    context "no version given, discovered or installed" do
       it "installs latest" do
-        new_resource.installer_type(:inno)
         expect(provider).to receive(:install_package).with("blah.exe", "latest")
         provider.run_action(:install)
+      end
+    end
+
+    context "no version given or discovered but package is installed" do
+      before { allow(provider).to receive(:current_version_array).and_return(["5.5.5"]) }
+
+      it "does not install" do
+        expect(provider).not_to receive(:install_package)
+        provider.run_action(:install)
+      end
+    end
+
+    context "a version is given and none is installed" do
+      before { new_resource.version('5.5.5') }
+
+      it "installs given version" do
+        expect(provider).to receive(:install_package).with("blah.exe", "5.5.5")
+        provider.run_action(:install)
+      end
+    end
+
+    context "a version is given and several are installed" do
+      context "given version matches an installed version" do
+        before do
+          new_resource.version('5.5.5')
+          allow(provider).to receive(:current_version_array).and_return([ ["5.5.5", "4.3.0", "1.1.1"] ])
+        end
+        
+        it "does not install" do
+          expect(provider).not_to receive(:install_package)
+          provider.run_action(:install)
+        end
+      end
+
+      context "given version does not match an installed version" do
+        before do
+          new_resource.version('5.5.5')
+          allow(provider).to receive(:current_version_array).and_return([ ["5.5.0", "4.3.0", "1.1.1"] ])
+        end
+        
+        it "installs given version" do
+          expect(provider).to receive(:install_package).with("blah.exe", "5.5.5")
+          provider.run_action(:install)
+        end
+      end
+    end
+
+    context "a version is given and one is installed" do
+      context "given version matches installed version" do
+        before do
+          new_resource.version('5.5.5')
+          allow(provider).to receive(:current_version_array).and_return(["5.5.5"])
+        end
+        
+        it "does not install" do
+          expect(provider).not_to receive(:install_package)
+          provider.run_action(:install)
+        end
+      end
+
+      context "given version does not match installed version" do
+        before do
+          new_resource.version('5.5.5')
+          allow(provider).to receive(:current_version_array).and_return(["5.5.0"])
+        end
+        
+        it "installs given version" do
+          expect(provider).to receive(:install_package).with("blah.exe", "5.5.5")
+          provider.run_action(:install)
+        end
       end
     end
   end

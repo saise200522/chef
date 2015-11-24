@@ -131,6 +131,26 @@ class Chef
           end
         end
 
+        # @return [Array] current_version(s) as an array
+        # this package provider does not support package arrays
+        # However, There may be multiple versions for a single 
+        # package so the first element may be a nested array
+        def current_version_array
+          [ current_resource.version ]
+        end
+
+        # @param current_version<String> one or more versions currently installed
+        # @param new_version<String> version of the new resource
+        #
+        # @return [Boolean] true if new_version is equal to or included in current_version
+        def target_version_already_installed?(current_version, new_version)
+          if current_version.is_a?(Array)
+            current_version.include?(new_version)
+          else
+            new_version == current_version
+          end
+        end
+
         private
 
         def downloadable_file_missing?
