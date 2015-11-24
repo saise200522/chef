@@ -111,11 +111,11 @@ class Chef
         # Chef::Provider::Package action_install + action_remove call install_package + remove_package
         # Pass those calls to the correct sub-provider
         def install_package(name, version)
-          package_provider.install_package(name, version)
+          package_provider.install_package
         end
 
         def remove_package(name, version)
-          package_provider.remove_package(name, version)
+          package_provider.remove_package
         end
 
         # @return [Array] new_version(s) as an array

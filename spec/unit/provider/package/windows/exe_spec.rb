@@ -66,7 +66,7 @@ describe Chef::Provider::Package::Windows::Exe do
   describe "remove_package" do
     it "calls start /d" do
       expect(provider).to receive(:shell_out!).with(/start \"\" \/wait \/d\"uninst_dir\" uninst_file \/S & exit %%%%ERRORLEVEL%%%%/, kind_of(Hash))
-      provider.remove_package("unused", "unused")
+      provider.remove_package
     end
   end
 
@@ -75,7 +75,7 @@ describe Chef::Provider::Package::Windows::Exe do
 
     it "calls installer with the correct flags" do
       expect(provider).to receive(:shell_out!).with(/start \"\" \/wait \"#{package_name}\" \/S \/NCRC  & exit %%%%ERRORLEVEL%%%%/, kind_of(Hash))
-      provider.install_package("unused", "unused")
+      provider.install_package
     end
   end
 
@@ -84,7 +84,7 @@ describe Chef::Provider::Package::Windows::Exe do
 
     it "calls installer with the correct flags" do
       expect(provider).to receive(:shell_out!).with(/start \"\" \/wait \"#{package_name}\" \/s \/sms  & exit %%%%ERRORLEVEL%%%%/, kind_of(Hash))
-      provider.install_package("unused", "unused")
+      provider.install_package
     end
   end
 
@@ -93,7 +93,7 @@ describe Chef::Provider::Package::Windows::Exe do
 
     it "calls installer with the correct flags" do
       expect(provider).to receive(:shell_out!).with(/start \"\" \/wait \"#{package_name}\" \/verysilent \/norestart  & exit %%%%ERRORLEVEL%%%%/, kind_of(Hash))
-      provider.install_package("unused", "unused")
+      provider.install_package
     end
   end
 
@@ -102,7 +102,7 @@ describe Chef::Provider::Package::Windows::Exe do
 
     it "calls installer with the correct flags" do
       expect(provider).to receive(:shell_out!).with(/start \"\" \/wait \"#{package_name}\" \/s  & exit %%%%ERRORLEVEL%%%%/, kind_of(Hash))
-      provider.install_package("unused", "unused")
+      provider.install_package
     end
   end
 end

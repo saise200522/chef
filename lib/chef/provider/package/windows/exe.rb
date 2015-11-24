@@ -48,7 +48,7 @@ class Chef
             @new_resource.version
           end
 
-          def install_package(name, version)
+          def install_package
             Chef::Log.debug("#{@new_resource} installing #{@new_resource.installer_type} package '#{@new_resource.source}'")
             shell_out!(
               [
@@ -63,7 +63,7 @@ class Chef
             )
           end
 
-          def remove_package(name, version)
+          def remove_package
             uninstall_string = installed_packages[@new_resource.package_name][:uninstall_string]
             Chef::Log.info("Registry provided uninstall string for #{@new_resource} is '#{uninstall_string}'")
             uninstall_command = begin
