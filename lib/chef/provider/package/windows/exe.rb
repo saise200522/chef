@@ -64,7 +64,23 @@ class Chef
           end
 
           def remove_package
-            uninstall_string = installed_packages[@new_resource.package_name][:uninstall_string]
+            uninstall_string = nil
+            if @new_resource.version
+              if installed_packages[@new_resource.version]
+                uninstall_string = installed_packages[@new_resource.version][:uninstall_string]
+              end
+            else
+              if installed_packages.keys.count == 1
+                uninstall_string = installed_packages[installed_packages.keys[0]][:uninstall_string]
+              else
+                raise Chef::Exceptions::MultiplePackagesFound, "Removing Windows Package '#{@new_resource.name}' found versions '#{@new_resource.version}' and no version given"
+              end
+            end
+
+            if uninstall_string.nil?
+              raise Chef::Exceptions::PackageVersionNotFound, "Removing Windows Package '#{@new_resource.name}' no version '#{@new_resource.version}' found"
+            end
+
             Chef::Log.info("Registry provided uninstall string for #{@new_resource} is '#{uninstall_string}'")
             uninstall_command = begin
               uninstall_string.delete!('"')
@@ -77,11 +93,7 @@ class Chef
           private
 
           def current_installed_version
-            @current_installed_version ||= begin
-              if installed_packages.include?(@new_resource.package_name)
-                installed_packages[@new_resource.package_name][:version]
-              end
-            end
+            @current_installed_version ||= installed_packages.keys
           end
 
           def installed_packages
@@ -124,25 +136,16 @@ class Chef
                 reg.each_key do |key, _wtime|
                   begin
                     k = reg.open(key, desired)
-                    display_name = begin
-                                     k['DisplayName']
-                                   rescue
-                                     nil
-                                   end
-                    version = begin
-                                k['DisplayVersion']
-                              rescue
-                                'NO VERSION'
-                              end
-                    uninstall_string = begin
-                                         k['UninstallString']
-                                       rescue
-                                         nil
-                                       end
-                    if display_name
-                      packages[display_name] = { name: display_name,
-                                                 version: version,
-                                                 uninstall_string: uninstall_string }
+                    display_name = k['DisplayName'] rescue nil
+                    version = k['DisplayVersion'] rescue 'NO VERSION'
+                    uninstall_string = k['UninstallString'] rescue nil
+
+                    if display_name == @new_resource.package_name
+                      packages[version] = {
+                        name: display_name,
+                        version: version,
+                        uninstall_string: uninstall_string
+                      }
                     end
                   rescue ::Win32::Registry::Error
                   end

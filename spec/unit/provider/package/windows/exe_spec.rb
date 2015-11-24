@@ -28,9 +28,8 @@ describe Chef::Provider::Package::Windows::Exe do
     allow(::File).to receive(:absolute_path).with(package_name).and_return(package_name)
     allow(provider).to receive(:installed_packages).and_return(
       { 
-        package_name => { 
-          uninstall_string: File.join("uninst_dir", "uninst_file"),
-          version: 'outdated'
+        'outdated' => { 
+          uninstall_string: File.join("uninst_dir", "uninst_file")
         }
       }
     )
@@ -52,7 +51,7 @@ describe Chef::Provider::Package::Windows::Exe do
 
   describe "installed_version" do
     it "returns the installed version" do
-      expect(provider.installed_version).to eql("outdated")
+      expect(provider.installed_version).to eql(["outdated"])
     end
   end
 
@@ -64,9 +63,47 @@ describe Chef::Provider::Package::Windows::Exe do
   end
 
   describe "remove_package" do
-    it "calls start /d" do
-      expect(provider).to receive(:shell_out!).with(/start \"\" \/wait \/d\"uninst_dir\" uninst_file \/S & exit %%%%ERRORLEVEL%%%%/, kind_of(Hash))
-      provider.remove_package
+    context "no version given and one package installed" do
+      it "removes installed package" do
+        expect(provider).to receive(:shell_out!).with(/start \"\" \/wait \/d\"uninst_dir\" uninst_file \/S & exit %%%%ERRORLEVEL%%%%/, kind_of(Hash))
+        provider.remove_package
+      end
+    end
+
+    context "several packages installed" do
+      before do
+        allow(provider).to receive(:installed_packages).and_return(
+          { 
+            'v1' => { 
+              uninstall_string: File.join("uninst_dir1", "uninst_file1")
+            },
+            'v2' => { 
+              uninstall_string: File.join("uninst_dir2", "uninst_file2")
+            }
+          }
+        )
+      end
+
+      context "version given and installed" do
+        it "removes given version" do
+          new_resource.version('v2')
+          expect(provider).to receive(:shell_out!).with(/start \"\" \/wait \/d\"uninst_dir2\" uninst_file2 \/S & exit %%%%ERRORLEVEL%%%%/, kind_of(Hash))
+          provider.remove_package
+        end
+      end
+
+      context "no version given" do
+        it "raises MultiplePackagesFound" do
+          expect{ provider.remove_package }.to raise_error(Chef::Exceptions::MultiplePackagesFound)
+        end
+      end
+
+      context "version given but not installed" do
+        it "raises PackageVersionNotFound" do
+          new_resource.version('v3')
+          expect{ provider.remove_package }.to raise_error(Chef::Exceptions::PackageVersionNotFound)
+        end
+      end
     end
   end
 

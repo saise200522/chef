@@ -170,6 +170,8 @@ class Chef
 
     class CannotDetermineHomebrewOwner < Package; end
     class CannotDetermineWindowsInstallerType < Package; end
+    class MultiplePackagesFound < Package; end
+    class PackageVersionNotFound < Package; end
 
     # Can not create staging file during file deployment
     class FileContentStagingError < RuntimeError
