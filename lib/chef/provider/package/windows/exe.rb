@@ -45,7 +45,8 @@ class Chef
           end
 
           def package_version
-            @new_resource.version
+            puts "nrv: #{@new_resource.version}"
+            @new_resource.version || install_file_version
           end
 
           def install_package
@@ -94,6 +95,13 @@ class Chef
 
           def current_installed_version
             @current_installed_version ||= installed_packages.keys
+          end
+
+          def install_file_version
+            @install_file_version ||= begin
+              version_info = Chef::ReservedNames::Win32::File.version_info(@new_resource.source)
+              version_info.FileVersion || version_info.ProductVersion
+            end
           end
 
           def installed_packages
